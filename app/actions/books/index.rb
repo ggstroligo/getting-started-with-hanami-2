@@ -5,7 +5,13 @@ module Bookshelf
     module Books
       class Index < Bookshelf::Action
         def handle(*, response)
-          response.body = self.class.name
+          books = [
+            { title: "Test Driven Development" },
+            { title: "Practical Object-Oriented Design in Ruby" }
+          ]
+
+          response.format = :json
+          response.body = books.to_json
         end
       end
     end
