@@ -1,4 +1,11 @@
-RSpec.describe "GET /books", type: :request do
+RSpec.describe "GET /books", type: [:request, :database] do
+  let(:books_db) { app["persistence.rom"].relations["books"] }
+
+  before do
+    books_db.insert(title: "Practical Object-Oriented Design in Ruby", author: "Sandi Metz")
+    books_db.insert(title: "Test Driven Development", author: "Kent Beck")
+  end
+
   it "returns a list of books" do
     get "/books"
 
@@ -8,8 +15,8 @@ RSpec.describe "GET /books", type: :request do
     response_body = JSON.parse(last_response.body)
 
     expect(response_body).to eq([
-      { "title" => "Test Driven Development" },
-      { "title" => "Practical Object-Oriented Design in Ruby" }
+      { "title" => "Practical Object-Oriented Design in Ruby", "author" => "Sandi Metz" },
+      { "title" => "Test Driven Development", "author" => "Kent Beck" }
     ])
   end
 end

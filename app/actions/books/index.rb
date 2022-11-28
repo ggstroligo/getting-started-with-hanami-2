@@ -1,14 +1,17 @@
 # frozen_string_literal: true
+require 'pry'
 
 module Bookshelf
   module Actions
     module Books
       class Index < Bookshelf::Action
+        include Deps["persistence.rom"]
+
         def handle(*, response)
-          books = [
-            { title: "Test Driven Development" },
-            { title: "Practical Object-Oriented Design in Ruby" }
-          ]
+          books = rom.relations["books"]
+                     .select(:title, :author)
+                     .order(:title)
+                     .to_a
 
           response.format = :json
           response.body = books.to_json
