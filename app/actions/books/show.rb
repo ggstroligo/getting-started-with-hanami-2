@@ -6,8 +6,6 @@ module Bookshelf
       class Show < Bookshelf::Action
         include Deps["persistence.rom"]
 
-        config.handle_exception ROM::TupleCountMismatchError => :handle_not_found
-
         params do
           required(:id).value(:integer)
         end
@@ -19,14 +17,6 @@ module Bookshelf
 
           response.format = :json
           response.body = book.to_json
-        end
-
-        private
-
-        def handle_not_found(_request, response, _exception)
-          response.status = 404
-          response.format = :json
-          response.body = {error: "not_found"}.to_json
         end
       end
     end
