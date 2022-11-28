@@ -14,5 +14,13 @@ module Bookshelf
       response.format = :json
       response.body = { error: "not_found" }.to_json
     end
+
+    def validate_params(req, _res)
+      return if req.params.valid?
+
+      status = 422
+      error = req.params.errors.to_json
+      halt status, error
+    end
   end
 end
